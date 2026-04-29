@@ -18,7 +18,7 @@ def playing_area():
     pen.end_fill()
 
 class Player(Turtle):
-    def __init__(self, x, y, color, screen, right_key, left_key, fire_key):
+    def __init__(self, x, y, color, screen, right_key, left_key, fire_key, health):
         super().__init__()
         self.ht()
         self.speed(0)
@@ -31,6 +31,7 @@ class Player(Turtle):
         self.bullets = []
         self.alive = True
         self.st()
+        self.health = 3
         screen.onkeypress(self.turn_left, left_key)
         screen.onkeypress(self.turn_right, right_key)
         screen.onkey(self.fire, fire_key)
@@ -54,8 +55,6 @@ class Player(Turtle):
     def die(self):
         self.alive = False
         self.hideturtle()
-        for bullet in self.bullets:
-            bullet.hideturtle()
 
 class Bullet(Turtle):
     def __init__(self, player):
@@ -67,12 +66,18 @@ class Bullet(Turtle):
         self.seth(player.heading())
         self.color("white")
         self.st()
+        self.player = player
 
 
     def move(self):
             self.forward(10)
-            # if not (-250 < self.xcor() < 250 and -250 < self.ycor() < 250):
-            #     self.hideturtle()
+            if not (-250 < self.xcor() < 250 and -250 < self.ycor() < 250):
+                self.die()
+
+    def die(self):
+        self.hideturtle()
+        self.player.bullets.remove(self)
+
 
 screen = Screen()
 screen.setup(520, 520)
@@ -82,8 +87,8 @@ screen.listen()
 
 playing_area()
 
-p1 = Player(-100, 0, "red", screen, "d", "a", "w")
-p2 = Player(100, 0, "blue", screen, "Right", "Left", "Up")
+p1 = Player(-100, 0, "green", screen, "d", "a", "w", 3)
+p2 = Player(100, 0, "blue", screen, "Right", "Left", "Up", 3)
 
 while True:
     p1.move()
@@ -91,18 +96,23 @@ while True:
     for bullet in p1.bullets:
         bullet.move()
         if p2.distance(bullet) < 20:
+            bullet.die()
+            p2.health -=1
             if p2.health == 2: 
                 p2.color("yellow")
-            if health == 1: 
+            if p2.health == 1: 
                 p2.color("red")
             else:
                 p2.hideturtle()
     for bullet in p2.bullets:
         bullet.move()
+
         if p1.distance(bullet) < 20:
+            bullet.die()
+            p1.health -=1
             if p1.health == 2: 
                 p1.color("yellow")
-            if health == 1: 
+            if p1.health == 1: 
                 p1.color("red")
             else:
                 p1.hideturtle()
