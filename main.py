@@ -87,7 +87,7 @@ screen.listen()
 
 playing_area()
 
-p1 = Player(-100, 0, "green", screen, "d", "a", "w", 3)
+p1 = Player(-100, 0, "red", screen, "d", "a", "w", 3)
 p2 = Player(100, 0, "blue", screen, "Right", "Left", "Up", 3)
 
 while True:
@@ -100,7 +100,7 @@ while True:
             p2.health -=1
             if p2.health == 2: 
                 p2.color("yellow")
-            if p2.health == 1: 
+            elif p2.health == 1: 
                 p2.color("red")
             else:
                 p2.hideturtle()
@@ -112,7 +112,7 @@ while True:
             p1.health -=1
             if p1.health == 2: 
                 p1.color("yellow")
-            if p1.health == 1: 
+            elif p1.health == 1: 
                 p1.color("red")
             else:
                 p1.hideturtle()
